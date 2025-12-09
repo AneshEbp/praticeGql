@@ -1,0 +1,83 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserType {
+  _id: ID!
+  name: String!
+  email: String!
+  address: String
+  createdAt: String!
+}
+
+type UserProfileModel {
+  message: String!
+  user: UserType!
+}
+
+type RegisterUserModel {
+  message: String!
+  user: UserType!
+}
+
+type LoginUserModel {
+  message: String!
+  accessToken: String
+  refreshToken: String
+}
+
+type AuthorType {
+  name: String!
+  email: String!
+}
+
+type PostType {
+  _id: ID!
+  authorId: AuthorType!
+  title: String!
+  description: String!
+}
+
+type CreatePostModel {
+  message: String!
+  post: PostType!
+}
+
+type GetPostModel {
+  message: String!
+  posts: [PostType!]!
+}
+
+type Query {
+  getProfile: UserProfileModel!
+  getAllPostByUser(userId: String!): GetPostModel!
+}
+
+type Mutation {
+  updateProfile(body: UpdateUserInput!): UserProfileModel!
+  registerUSer(body: CreateUSerInput!): RegisterUserModel!
+  loginUser(body: LoginUserInput!): LoginUserModel!
+  createpost(body: CreatePostInput!): CreatePostModel!
+}
+
+input UpdateUserInput {
+  name: String
+  password: String
+  address: String
+}
+
+input CreateUSerInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+input CreatePostInput {
+  title: String!
+  description: String!
+}
