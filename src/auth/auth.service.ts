@@ -12,11 +12,13 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
+
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
+
   ) {}
 
   async register(body: RegisterUserDto) {
@@ -69,4 +71,6 @@ export class AuthService {
       refreshToken,
     };
   }
+
+ 
 }

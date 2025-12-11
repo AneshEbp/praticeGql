@@ -8,10 +8,15 @@ import { Model } from 'mongoose';
 import { User } from 'src/schema/user.schema';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { use } from 'passport';
+import { Post } from 'src/schema/post.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+
+    @InjectModel(Post.name) private postModel: Model<Post>,
+  ) {}
 
   async getProfile(id: string) {
     const user = await this.userModel.findById(id).lean();
@@ -51,7 +56,17 @@ export class UserService {
     };
   }
 
-  async getAllUser(){
-    
+  async getuserspost(userId: string) {
+    const posts = await this.postModel.find({ authorId: userId }).lean();
+    if (!posts) {
+      return [];
+    }
+    return posts.map((p) => ({
+      ...p,
+      _id: p._id.toString(), // ensure _id is string
+      authorId: p.  authorId.toString(),
+    }));
   }
+
+  async getAllUser() {}
 }

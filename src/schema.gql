@@ -2,28 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PostTypeinUser {
+  _id: ID!
+  title: String!
+  description: String!
+}
+
 type UserType {
   _id: ID!
   name: String!
   email: String!
   address: String
   createdAt: String!
+  post: [PostTypeinUser]
 }
 
 type UserProfileModel {
   message: String!
   user: UserType!
-}
-
-type RegisterUserModel {
-  message: String!
-  user: UserType!
-}
-
-type LoginUserModel {
-  message: String!
-  accessToken: String
-  refreshToken: String
 }
 
 type AuthorType {
@@ -48,22 +44,70 @@ type GetPostModel {
   posts: [PostType!]!
 }
 
+type DeletePostModel {
+  message: String!
+}
+
+type DeletePubSubModel {
+  message: String!
+}
+
+type CreatePostPubSubModel {
+  message: String!
+}
+
+type RegisterUserModel {
+  message: String!
+  user: UserType!
+}
+
+type LoginUserModel {
+  message: String!
+  accessToken: String
+  refreshToken: String
+}
+
 type Query {
   getProfile: UserProfileModel!
-  getAllPostByUser(userId: String!): GetPostModel!
+  getAllPostByUser(body: GetPostInput!): GetPostModel!
+}
+
+input GetPostInput {
+  userId: ID!
+  page: Float! = 1
+  limit: Float! = 10
+  sortBy: String! = "createdAt"
+  sortOrder: String! = "asc"
 }
 
 type Mutation {
   updateProfile(body: UpdateUserInput!): UserProfileModel!
+  createpost(body: CreatePostInput!): CreatePostModel!
+  updatepost(body: UpdatePostInput!): CreatePostModel!
+  DeletePostModel(body: DeletePostInput!): DeletePostModel!
   registerUSer(body: CreateUSerInput!): RegisterUserModel!
   loginUser(body: LoginUserInput!): LoginUserModel!
-  createpost(body: CreatePostInput!): CreatePostModel!
 }
 
 input UpdateUserInput {
   name: String
   password: String
   address: String
+}
+
+input CreatePostInput {
+  title: String!
+  description: String!
+}
+
+input UpdatePostInput {
+  postId: ID!
+  title: String
+  description: String
+}
+
+input DeletePostInput {
+  postId: String!
 }
 
 input CreateUSerInput {
@@ -77,7 +121,7 @@ input LoginUserInput {
   password: String!
 }
 
-input CreatePostInput {
-  title: String!
-  description: String!
+type Subscription {
+  postdeleted: DeletePubSubModel!
+  postcreated: CreatePostPubSubModel!
 }

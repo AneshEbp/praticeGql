@@ -28,6 +28,7 @@ import { PostModule } from './post/post.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      installSubscriptionHandlers:true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),

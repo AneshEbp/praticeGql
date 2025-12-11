@@ -1,16 +1,18 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PostResolver } from './post.resolver';
 import { PostService } from './post.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, postSchema } from 'src/schema/post.schema';
 import { UserModule } from 'src/user/user.module';
+import { SubscriptionService } from 'src/services/subscriptionServices';
+// import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
     MongooseModule.forFeature([{ name: Post.name, schema: postSchema }]),
   ],
-  providers: [PostResolver, PostService],
+  providers: [PostResolver, PostService, SubscriptionService],
   exports: [MongooseModule],
 })
 export class PostModule {}

@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import passport from 'passport';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwtStategt';
+import { PostModule } from 'src/post/post.module';
 // import { PassportModule } from '@nestjs/passport';
 
 @Module({
@@ -16,8 +17,9 @@ import { JwtStrategy } from './jwtStategt';
       secret: 'helloworld',
       signOptions: { expiresIn: '1h' },
     }),
+    PostModule
   ],
   providers: [AuthService, AuthResolver, JwtStrategy],
-  exports:[AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

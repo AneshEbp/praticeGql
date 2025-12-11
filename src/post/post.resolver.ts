@@ -5,8 +5,9 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
-import { PostService } from './post.service';
+import { PostService, pubsub } from './post.service';
 import { CreatePostModel } from './models/create-post.model';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/guards/gqlAuthGuard';
@@ -15,10 +16,20 @@ import { CreatePostInput } from './dtos/create-post.input';
 import { AuthorType } from './models/author.model';
 import { PostType } from './models/post.model';
 import { GetPostModel } from './models/getposts.model';
+import { UpdatePostInput } from './dtos/update-post.input';
+import { DeletePostModel } from './models/delete-post.model';
+import { DeletePostInput } from './dtos/delete-post.input';
+import { GetPostInput } from './dtos/get-post.input';
+import { DeletePubSubModel } from './models/delete.pubsub.model';
+import { SubscriptionService } from 'src/services/subscriptionServices';
+import { CreatePostPubSubModel } from './models/create-pots.pubsub.model';
 
 @Resolver(() => PostType)
 export class PostResolver {
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private subscriptionService: SubscriptionService,
+  ) {}
 
   @Mutation(() => CreatePostModel)
   @UseGuards(GqlAuthGuard)
@@ -41,7 +52,50 @@ export class PostResolver {
   }
 
   @Query(() => GetPostModel)
-  async getAllPostByUser(@Args('userId') userId: string) {
-    return this.postService.getAllPostByUser(userId);
+  async getAllPostByUser(
+    // @Args('userId') userId: string,
+    // @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
+    // @Args('limit', { type: () => Number, defaultValue: 10 }) limit: number,
+    // @Args('sortBy', { type: () => String, defaultValue: 'createdAt' })
+    // sortBy: string,
+    // @Args('sortOrder', { type: () => String, defaultValue: 'asc' })
+    // sortOrder: string,
+    @Args('body') body: GetPostInput,
+  ) {
+    return this.postService.getAllPostByUser(
+      body.userId,
+      body.page,
+      body.limit,
+      body.sortBy,
+      body.sortOrder,
+    );
+  }
+
+  @Mutation(() => CreatePostModel)
+  @UseGuards(GqlAuthGuard)
+  async updatepost(
+    @UserDetails('userId') userId: string,
+    @Args('body') body: UpdatePostInput,
+  ) {
+    return this.postService.updatePost(userId, body);
+  }
+
+  @Mutation(() => DeletePostModel)
+  @UseGuards(GqlAuthGuard)
+  async DeletePostModel(
+    @UserDetails('userId') userId: string,
+    @Args('body') body: DeletePostInput,
+  ) {
+    return this.postService.deletePost(userId, body);
+  }
+
+  @Subscription(() => DeletePubSubModel)
+  postdeleted() {
+    return this.subscriptionService.registerSubscriptions('DeletedMessage');
+  }
+
+  @Subscription(()=>CreatePostPubSubModel)
+  postcreated() {
+    return this.subscriptionService.registerSubscriptions('postcreated');
   }
 }
