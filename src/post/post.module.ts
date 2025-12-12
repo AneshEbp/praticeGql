@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Post, postSchema } from 'src/schema/post.schema';
 import { UserModule } from 'src/user/user.module';
 import { SubscriptionService } from 'src/services/subscriptionServices';
+// import { UploadScalar } from './file.scalar';
+import { FileService } from './file.service';
 // import { UserModule } from 'src/user/user.module';
 
 @Module({
@@ -12,7 +14,7 @@ import { SubscriptionService } from 'src/services/subscriptionServices';
     forwardRef(() => UserModule),
     MongooseModule.forFeature([{ name: Post.name, schema: postSchema }]),
   ],
-  providers: [PostResolver, PostService, SubscriptionService],
+  providers: [PostResolver, PostService, SubscriptionService, FileService],
   exports: [MongooseModule],
 })
 export class PostModule {}

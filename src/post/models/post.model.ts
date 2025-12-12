@@ -14,4 +14,7 @@ export class PostType {
 
   @Field()
   description: string;
+
+  @Field({ nullable: true })
+  fileUrl?: string;
 }

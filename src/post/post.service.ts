@@ -24,7 +24,7 @@ export class PostService {
     private subscriptionService: SubscriptionService,
   ) {}
 
-  async createPost(userId: string, body: CreatePostDto) {
+  async createPost(userId: string, body: CreatePostDto, fileUrl: string) {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('cant find the user');
@@ -33,6 +33,7 @@ export class PostService {
       title: body.title,
       description: body.description,
       authorId: userId,
+      fileUrl,
     });
     const post = await newPost.save();
     if (!post) {

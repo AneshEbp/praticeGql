@@ -13,6 +13,9 @@ export class Post {
 
   @Prop({ required: true })
   description: string;
+
+  @Prop()
+  fileUrl: string;
 }
 
 export const postSchema = SchemaFactory.createForClass(Post);

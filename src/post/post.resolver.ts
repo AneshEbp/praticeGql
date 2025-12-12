@@ -23,12 +23,14 @@ import { GetPostInput } from './dtos/get-post.input';
 import { DeletePubSubModel } from './models/delete.pubsub.model';
 import { SubscriptionService } from 'src/services/subscriptionServices';
 import { CreatePostPubSubModel } from './models/create-pots.pubsub.model';
+import { FileService } from './file.service';
 
 @Resolver(() => PostType)
 export class PostResolver {
   constructor(
     private postService: PostService,
     private subscriptionService: SubscriptionService,
+    private fileService: FileService,
   ) {}
 
   @Mutation(() => CreatePostModel)
@@ -37,7 +39,10 @@ export class PostResolver {
     @UserDetails('userId') userId: string,
     @Args('body') body: CreatePostInput,
   ) {
-    return this.postService.createPost(userId, body);
+    const { file } = body;
+    // Save file separately
+    const fileUrl = await this.fileService.uploadToCloudinary(await file);
+    return this.postService.createPost(userId, body, fileUrl);
   }
 
   @ResolveField(() => AuthorType)
@@ -94,7 +99,7 @@ export class PostResolver {
     return this.subscriptionService.registerSubscriptions('DeletedMessage');
   }
 
-  @Subscription(()=>CreatePostPubSubModel)
+  @Subscription(() => CreatePostPubSubModel)
   postcreated() {
     return this.subscriptionService.registerSubscriptions('postcreated');
   }
