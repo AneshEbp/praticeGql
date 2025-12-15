@@ -30,9 +30,24 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       // uploads:false,
-      installSubscriptionHandlers: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      // subscriptions: {
+      //   'graphql-ws': {
+      //     path: '/graphql',
+      //     onConnect: (ctx) => {
+      //       console.log('Subscription client connected', ctx.connectionParams);
+      //       return true; // allow all connections
+      //     },
+      //     onDisconnect: (ctx, code, reason) => {
+      //       console.log('Subscription client disconnected', code, reason);
+      //     },
+      //   },
+      // },
+      subscriptions:{
+        'graphql-ws':true,
+        'subscriptions-transport-ws':true
+      }
     }),
     UserModule,
     AuthModule,

@@ -7,7 +7,7 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { PostService, pubsub } from './post.service';
+import { PostService } from './post.service';
 import { CreatePostModel } from './models/create-post.model';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/guards/gqlAuthGuard';
@@ -96,11 +96,12 @@ export class PostResolver {
 
   @Subscription(() => DeletePubSubModel)
   postdeleted() {
-    return this.subscriptionService.registerSubscriptions('DeletedMessage');
+    return this.subscriptionService.asyncIterator('postdeleted');
   }
 
   @Subscription(() => CreatePostPubSubModel)
   postcreated() {
-    return this.subscriptionService.registerSubscriptions('postcreated');
+    return this.subscriptionService.asyncIterator('postcreated');
   }
+
 }

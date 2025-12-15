@@ -11,10 +11,7 @@ import { CreatePostDto } from './dtos/create-post.dto';
 import { User } from 'src/schema/user.schema';
 import { updatePostDto } from './dtos/updaet-pots.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
-import { PubSub } from 'graphql-subscriptions';
 import { SubscriptionService } from 'src/services/subscriptionServices';
-
-export const pubsub = new PubSub(); // Shared PubSub
 
 @Injectable()
 export class PostService {
@@ -122,8 +119,10 @@ export class PostService {
       throw new BadRequestException(' cant delete the post');
     }
 
-    this.subscriptionService.publish('deleted', {
-      message: 'post deleted',
+    this.subscriptionService.publish('postdeleted', {
+      postdeleted: {
+        message: 'post deleted',
+      },
     });
     return {
       message: 'post deleted successfully',

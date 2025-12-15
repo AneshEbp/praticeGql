@@ -8,22 +8,11 @@ export class SubscriptionService {
     this.pubSub = new PubSub();
   }
 
-  async publish(triggerName: string, payload: any) {
-    console.log("i m at publish,")
-    console.log({triggerName, payload});
-    
-    try {
-      console.log(await this.pubSub.publish('postcreated', { postcreated: { message: 'hello world' } }));
-      
-    } catch (error) {
-      console.log({error});
-      
-      
-    }
-    return await this.pubSub.publish('postcreated',{ postcreated: { message: 'hello world' } } );
+  publish(triggerName: string, payload: any) {
+    return this.pubSub.publish(triggerName, payload);
   }
 
-  async asyncIterator<T>(triggers: string | string[]): Promise<AsyncIterator<T>> {
-    return await this.pubSub.asyncIterableIterator<T>(triggers);
+  asyncIterator<T>(triggers: string | string[]): AsyncIterator<T> {
+    return this.pubSub.asyncIterableIterator<T>(triggers);
   }
 }
