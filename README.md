@@ -22,78 +22,208 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Practice GraphQL API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A NestJS-based GraphQL API for practicing GraphQL concepts, including authentication, user management, posts, file uploads, and real-time subscriptions.
 
-## Project setup
+## Features
+
+- **Authentication**: JWT-based authentication with register and login
+- **User Management**: Update user profiles
+- **Posts**: Create, read, update, delete posts with file uploads
+- **File Uploads**: Image uploads using Cloudinary
+- **Real-time Subscriptions**: GraphQL subscriptions for post creation and deletion events
+- **Database**: MongoDB with Mongoose
+
+## Tech Stack
+
+- **Framework**: NestJS
+- **GraphQL**: Apollo Server
+- **Database**: MongoDB (Mongoose)
+- **Authentication**: JWT, Passport
+- **File Storage**: Cloudinary
+- **Language**: TypeScript
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- MongoDB
+- Cloudinary account (for file uploads)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/AneshEbp/praticeGql.git
+   cd praticeGql
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/practicegql
+   JWT_SECRET=your_jwt_secret
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+4. Start MongoDB (if running locally)
+
+## Running the Application
 
 ```bash
-$ npm install
+# Development mode
+npm run start:dev
+
+# Production mode
+npm run start:prod
 ```
 
-## Compile and run the project
+The server will start on `http://localhost:3000` with GraphQL playground at `http://localhost:3000/graphql`.
+
+## Usage
+
+### Authentication
+
+Register a new user:
+```graphql
+mutation {
+  register(registerUserInput: {
+    username: "testuser"
+    email: "test@example.com"
+    password: "password123"
+  }) {
+    access_token
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+```
+
+Login:
+```graphql
+mutation {
+  login(loginUserInput: {
+    email: "test@example.com"
+    password: "password123"
+  }) {
+    access_token
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+```
+
+### Posts
+
+Create a post (include JWT token in Authorization header):
+```graphql
+mutation($file: Upload!) {
+  createPost(createPostInput: {
+    title: "My Post"
+    content: "Post content"
+  }, file: $file) {
+    id
+    title
+    content
+    imageUrl
+    author {
+      username
+    }
+  }
+}
+```
+
+Get posts:
+```graphql
+query {
+  posts {
+    id
+    title
+    content
+    imageUrl
+    author {
+      username
+    }
+  }
+}
+```
+
+### Subscriptions
+
+Subscribe to post creation:
+```graphql
+subscription {
+  postcreated {
+    message
+  }
+}
+```
+
+Subscribe to post deletion:
+```graphql
+subscription {
+  postdeleted {
+    message
+  }
+}
+```
+
+## Testing
 
 ```bash
-# development
-$ npm run start
+# Unit tests
+npm run test
 
-# watch mode
-$ npm run start:dev
+# E2E tests
+npm run test:e2e
 
-# production mode
-$ npm run start:prod
+# Test coverage
+npm run test:cov
 ```
 
-## Run tests
+## Project Structure
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+src/
+├── app.module.ts          # Main application module
+├── main.ts                # Application entry point
+├── commons/               # Shared utilities
+│   ├── config/            # Configuration files
+│   ├── decorators/        # Custom decorators
+│   └── guards/            # Authentication guards
+├── modules/               # Feature modules
+│   ├── auth/              # Authentication module
+│   ├── post/              # Posts module
+│   └── user/              # User management module
+├── schema/                # GraphQL schema definitions
+└── services/              # Shared services
 ```
 
-## Deployment
+## API Documentation
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+The GraphQL schema is auto-generated and can be explored using the GraphQL playground at `/graphql`.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Contributing
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is unlicensed.

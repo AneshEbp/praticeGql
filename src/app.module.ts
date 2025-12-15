@@ -7,9 +7,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { PostModule } from './post/post.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { PostModule } from './modules/post/post.module';
 import { graphqlUploadExpress } from 'graphql-upload-ts';
 
 @Module({

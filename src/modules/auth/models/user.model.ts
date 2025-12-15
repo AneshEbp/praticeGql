@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { PostType } from 'src/post/models/post.model';
-import { PostTypeinUser } from 'src/user/models/user-in-post.model';
+import { PostType } from 'src/modules/post/models/post.model';
+import { PostTypeinUser } from 'src/modules/user/models/user-in-post.model';
 
 
 

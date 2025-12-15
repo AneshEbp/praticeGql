@@ -4,7 +4,6 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 interface JwtUser {
   userId: string;
   email: string;
-  //   role: string;
 }
 export const UserDetails = createParamDecorator(
   (data: keyof JwtUser, context: ExecutionContext) => {

@@ -12,8 +12,8 @@ import { CreateUSerInput } from './dtos/create-user.input';
 import { RegisterUserModel } from './models/register-user.model';
 import { LoginUserModel } from './models/login-user.model';
 import { LoginUserInput } from './dtos/login-user.input';
-import { PostType } from 'src/post/models/post.model';
-import { PostService } from 'src/post/post.service';
+import { PostType } from 'src/modules/post/models/post.model';
+import { PostService } from 'src/modules/post/post.service';
 
 @Resolver(() => UserType)
 export class AuthResolver {

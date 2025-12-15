@@ -7,13 +7,13 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { GqlAuthGuard } from 'src/guards/gqlAuthGuard';
+import { GqlAuthGuard } from 'src/commons/guards/gqlAuthGuard';
 import { UseGuards } from '@nestjs/common';
-import { UserDetails } from 'src/decorators/user.decorator';
+import { UserDetails } from 'src/commons/decorators/user.decorator';
 import { UserProfileModel } from './models/userprofile.model';
 import { UpdateUserInput } from './dtos/update-user.input';
-import {  UserType } from 'src/auth/models/user.model';
-import { PostType } from 'src/post/models/post.model';
+import {  UserType } from 'src/modules/auth/models/user.model';
+import { PostType } from 'src/modules/post/models/post.model';
 import { PostTypeinUser } from './models/user-in-post.model';
 
 @Resolver(() => UserType)
