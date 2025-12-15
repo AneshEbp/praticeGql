@@ -40,7 +40,7 @@ export class PostService {
       throw new BadRequestException('cant create post');
     }
 
-    this.subscriptionService.publishSubscriptons('postcreated', {
+    this.subscriptionService.publish('postcreated', {
       postcreated: {
         message: 'post created successfully',
       },
@@ -122,7 +122,7 @@ export class PostService {
       throw new BadRequestException(' cant delete the post');
     }
 
-    this.subscriptionService.publishSubscriptons('deleted', {
+    this.subscriptionService.publish('deleted', {
       message: 'post deleted',
     });
     return {
