@@ -11,6 +11,9 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostModule } from './modules/post/post.module';
 import { graphqlUploadExpress } from 'graphql-upload-ts';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlThrottlerGuard } from './commons/guards/gql-throttler.guard';
 
 @Module({
   imports: [
@@ -44,17 +47,30 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
       //     },
       //   },
       // },
-      subscriptions:{
-        'graphql-ws':true,
-        'subscriptions-transport-ws':true
-      }
+      subscriptions: {
+        'graphql-ws': true,
+        'subscriptions-transport-ws': true,
+      },
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 600000,
+        limit: 10,
+      },
+    ]),
     UserModule,
     AuthModule,
     PostModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      // useClass: ThrottlerGuard, // rest guard
+      useClass:GqlThrottlerGuard //gql guard
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

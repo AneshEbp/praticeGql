@@ -24,6 +24,7 @@ import { DeletePubSubModel } from './models/delete.pubsub.model';
 import { SubscriptionService } from 'src/services/subscriptionServices';
 import { CreatePostPubSubModel } from './models/create-pots.pubsub.model';
 import { FileService } from './file.service';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @Resolver(() => PostType)
 export class PostResolver {
@@ -35,6 +36,7 @@ export class PostResolver {
 
   @Mutation(() => CreatePostModel)
   @UseGuards(GqlAuthGuard)
+  @Throttle({ default: { ttl: 60000, limit: 5 } }) // 5 requests/minute
   async createpost(
     @UserDetails('userId') userId: string,
     @Args('body') body: CreatePostInput,
@@ -57,6 +59,7 @@ export class PostResolver {
   }
 
   @Query(() => GetPostModel)
+  @SkipThrottle() // No rate limitin
   async getAllPostByUser(
     // @Args('userId') userId: string,
     // @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
@@ -103,5 +106,4 @@ export class PostResolver {
   postcreated() {
     return this.subscriptionService.asyncIterator('postcreated');
   }
-
 }
